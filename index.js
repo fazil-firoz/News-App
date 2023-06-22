@@ -2,25 +2,32 @@
 const generalBtn = document.getElementById("genral");
 const businessBtn = document.getElementById("business");
 const sportsBtn = document.getElementById("sport");
+
 const entertainmentBtn = document.getElementById("entertainment");
 const technologyBtn = document.getElementById("technology");
+const healthBtn = document.getElementById("health")
 const searchBtn = document.getElementById("searchBtn");
 
 const newsQuery = document.getElementById("newsQuery");
 const newsType = document.getElementById("newsType");
 const newsdetails = document.getElementById("newsdetails");
 
+
+
+
+
 // Array
 var newsDataArr = [];
 
 // apis 
-const API_KEY = "YOUR_API_KEY";
+const API_KEY = "8ca17325eac0435784e79d194b8dbee9";
 const HEADLINES_NEWS = "https://newsapi.org/v2/top-headlines?country=in&apiKey=";
 const GENERAL_NEWS = "https://newsapi.org/v2/top-headlines?country=in&category=general&apiKey=";
 const BUSINESS_NEWS = "https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=";
 const SPORTS_NEWS = "https://newsapi.org/v2/top-headlines?country=in&category=sports&apiKey=";
 const ENTERTAINMENT_NEWS = "https://newsapi.org/v2/top-headlines?country=in&category=entertainment&apiKey=";
 const TECHNOLOGY_NEWS = "https://newsapi.org/v2/top-headlines?country=in&category=technology&pageSize=8&apiKey=";
+const HEALTH_NEWS = "https://newsapi.org/v2/top-headlines?country=in&category=health&apiKey=";
 const SEARCH_NEWS = "https://newsapi.org/v2/everything?q=";
 
 window.onload = function() {
@@ -53,6 +60,11 @@ technologyBtn.addEventListener("click",function(){
     newsType.innerHTML="<h4>Technology</h4>";
     fetchTechnologyNews();
 });
+
+healthBtn.addEventListener("click",function(){
+    newsType.innerHTML="<h4>Health</h4>";
+    fetchHealthNews();
+})
 
 searchBtn.addEventListener("click",function(){
     newsType.innerHTML="<h4>Search : "+newsQuery.value+"</h4>";
@@ -157,6 +169,22 @@ const fetchTechnologyNews = async () => {
     displayNews();
 }
 
+const fetchHealthNews = async () => {
+    const response = await fetch(HEALTH_NEWS+API_KEY);
+    newsDataArr = [];
+    if(response.status >=200 && response.status < 300) {
+        const myJson = await response.json();
+        newsDataArr = myJson.articles;
+    } else {
+        // handle errors
+        console.log(response.status, response.statusText);
+        newsdetails.innerHTML = "<h5>No data found.</h5>"
+        return;
+    }
+
+    displayNews();
+}
+
 const fetchQueryNews = async () => {
 
     if(newsQuery.value == null)
@@ -216,7 +244,7 @@ function displayNews() {
         discription.innerHTML = news.description;
 
         var link = document.createElement('a');
-        link.className="btn btn-dark";
+        link.className="btn btn-success";
         link.setAttribute("target", "_blank");
         link.href = news.url;
         link.innerHTML="Read more";
